@@ -6,7 +6,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.diogenes.pokeapp.R;
 import com.diogenes.pokeapp.adapter.PokeListAdapter;
@@ -24,9 +23,12 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
+
     private RecyclerView mRvPokeList;
     private PokeListAdapter adapter;
     private List<Pokemon> listPokemon = new ArrayList<Pokemon>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,25 +46,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void getData(){
+    public void getData() {
         PokemonInterface pokemonInterface = ClientApi.getClient().create(PokemonInterface.class);
-        for (int i = 0; i<= 30;i++){
-            Call<Pokemon> list = pokemonInterface.getPokemon(i);
-            list.enqueue(new Callback<Pokemon>() {
-                @Override
-                public void onResponse(Call<Pokemon> call, Response<Pokemon> response) {
-                    if (response.isSuccessful()) {
-                        Pokemon pokemon = response.body();
-
-                        listPokemon.add(pokemon);
-                        adapter.notifyDataSetChanged();
+        Call<PokemonList> list = pokemonInterface.getPokemonList();
+        list.enqueue(new Callback<PokemonList>() {
+            @Override
+            public void onResponse(Call<PokemonList> call, Response<PokemonList> response) {
+                if (response.isSuccessful()) {
+                    PokemonList list = response.body();
+                    adapter.addPokemonOnView(list.getPokemons());
+                    for (Pokemon pokemon : list.getPokemons()) {
+                        Log.d(TAG, "onResponse: " + pokemon.getName());
                     }
+                } else {
+                    Log.d(TAG, "onResponse: error  " + response.errorBody());
                 }
-                @Override
-                public void onFailure(Call<Pokemon> call, Throwable t) {
+            }
 
-                }
-            });
-        }
+            @Override
+            public void onFailure(Call<PokemonList> call, Throwable t) {
+                Log.d(TAG, "onFailure: " + t.getMessage());
+            }
+        });
     }
 }
