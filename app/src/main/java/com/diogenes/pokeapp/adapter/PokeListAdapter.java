@@ -58,7 +58,6 @@ public class PokeListAdapter extends RecyclerView.Adapter<PokeListAdapter.PokeLi
     public void onBindViewHolder(final PokeListViewHolder holder, int position) {
         Pokemon pokemon = mPokemonList.get(position);
         holder.name.setText(pokemon.getName());
-        holder.type.setText(pokemon.getType());
 
         PokemonInterface service = ClientApi.getClient().create(PokemonInterface.class);
         Call<PokemonForm> callForm = service.getPokemonFormByName(pokemon.getName());

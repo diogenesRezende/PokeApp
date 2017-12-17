@@ -1,16 +1,20 @@
 package com.diogenes.pokeapp.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import com.diogenes.pokeapp.R;
 import com.diogenes.pokeapp.adapter.PokeListAdapter;
 import com.diogenes.pokeapp.api.client.ClientApi;
 import com.diogenes.pokeapp.api.definition.PokemonInterface;
+import com.diogenes.pokeapp.listener.RecyclerViewTouchListener;
 import com.diogenes.pokeapp.model.Pokemon;
 import com.diogenes.pokeapp.model.PokemonList;
 
@@ -41,6 +45,21 @@ public class MainActivity extends AppCompatActivity {
         mRvPokeList.setLayoutManager(layoutManager);
         mRvPokeList.setItemAnimator(new DefaultItemAnimator());
         mRvPokeList.setAdapter(adapter);
+        mRvPokeList.addOnItemTouchListener(
+                new RecyclerViewTouchListener(getApplicationContext(), mRvPokeList,
+                        new RecyclerViewTouchListener.ClickListener() {
+                            @Override
+                            public void onClick(View view, int position) {
+                                Intent intent = new Intent(MainActivity.this, PokemonDetailActivity.class);
+                                intent.putExtra("pokemon", listPokemon.get(position));
+                                startActivity(intent);
+                            }
+
+                            @Override
+                            public void onLongClick(View view, int position) {
+
+                            }
+                        }));
 
         getData();
     }

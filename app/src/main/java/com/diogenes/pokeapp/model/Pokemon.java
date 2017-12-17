@@ -14,23 +14,13 @@ public class Pokemon implements Serializable {
     @SerializedName("name")
     @Expose
     private String name;
-    public String type;
 
-    public Pokemon(String url, String name, String type) {
+    public Pokemon(String url, String name) {
         this.url = url;
         this.name = name;
-        this.type = type;
     }
 
     public Pokemon() {
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getUrl() {
@@ -49,5 +39,8 @@ public class Pokemon implements Serializable {
         this.name = name;
     }
 
-
+    @Override
+    public String toString() {
+        return url + " = " + name;
+    }
 }
