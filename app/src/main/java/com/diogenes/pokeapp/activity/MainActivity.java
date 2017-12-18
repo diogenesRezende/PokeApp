@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void getData() {
         PokemonInterface pokemonInterface = ClientApi.getClient().create(PokemonInterface.class);
-        Call<PokemonList> list = pokemonInterface.getPokemonList();
-        list.enqueue(new Callback<PokemonList>() {
+        Call<PokemonList> callPokemonList = pokemonInterface.getPokemonList();
+        callPokemonList.enqueue(new Callback<PokemonList>() {
             @Override
             public void onResponse(Call<PokemonList> call, Response<PokemonList> response) {
                 if (response.isSuccessful()) {
