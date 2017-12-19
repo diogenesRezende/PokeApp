@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class ClientApi {
-    public static final String BASE_URL = "http://pokeapi.co/";
+    public static final String BASE_URL = "https://pokeapi.co/";
     private static Retrofit retrofit = null;
 
     public static Retrofit getClient() {
