@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">PokeApp</string>
+    <string name="detail_weight">Weight:</string>
+    <string name="detail_types_label">Types:</string>
+    <string name="detail_weight_label">Weight:</string>
+    <string name="detail_ability_title">Abilities</string>
+    <string name="detail_stat_title">Stats</string>
+    <string name="detail_moves_title">Moves</string>
 </resources>

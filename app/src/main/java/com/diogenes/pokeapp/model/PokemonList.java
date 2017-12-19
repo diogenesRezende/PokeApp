@@ -12,7 +12,7 @@ public class PokemonList {
     private Integer count;
     @SerializedName("results")
     @Expose
-    private List<Pokemon> pokemons = null;
+    private List<GenericCommonEntity> pokemons = null;
 
     public Integer getCount() {
         return count;
@@ -22,11 +22,11 @@ public class PokemonList {
         this.count = count;
     }
 
-    public List<Pokemon> getPokemons() {
+    public List<GenericCommonEntity> getPokemons() {
         return pokemons;
     }
 
-    public void setPokemons(List<Pokemon> pokemons) {
+    public void setPokemons(List<GenericCommonEntity> pokemons) {
         this.pokemons = pokemons;
     }
 

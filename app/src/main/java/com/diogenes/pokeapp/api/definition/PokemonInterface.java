@@ -1,6 +1,5 @@
 package com.diogenes.pokeapp.api.definition;
 
-import com.diogenes.pokeapp.model.PokemonForm;
 import com.diogenes.pokeapp.model.Pokemon;
 import com.diogenes.pokeapp.model.PokemonList;
 
@@ -19,6 +18,4 @@ public interface PokemonInterface {
     Call<Pokemon> getPokemonById(@Path("id")int id);
     @GET("api/v2/pokemon/{name}")
     Call<Pokemon> getPokemonByName(@Path("name")String name);
-    @GET("api/v2/pokemon-form/{name}")
-    Call<PokemonForm> getPokemonFormByName(@Path("name")String name);
 }

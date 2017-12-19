@@ -11,8 +11,8 @@ import android.widget.TextView;
 import com.diogenes.pokeapp.R;
 import com.diogenes.pokeapp.api.client.ClientApi;
 import com.diogenes.pokeapp.api.definition.PokemonInterface;
+import com.diogenes.pokeapp.model.GenericCommonEntity;
 import com.diogenes.pokeapp.model.Pokemon;
-import com.diogenes.pokeapp.model.PokemonForm;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -27,7 +27,7 @@ import retrofit2.Response;
 
 public class PokeListAdapter extends RecyclerView.Adapter<PokeListAdapter.PokeListViewHolder> {
     private static final String TAG = "PokeListAdapter";
-    private List<Pokemon> mPokemonList;
+    private List<GenericCommonEntity> mPokemonList;
 
 
     public class PokeListViewHolder extends RecyclerView.ViewHolder {
@@ -38,12 +38,11 @@ public class PokeListAdapter extends RecyclerView.Adapter<PokeListAdapter.PokeLi
         public PokeListViewHolder(View itemView) {
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.tv_name);
-            type = (TextView) itemView.findViewById(R.id.tv_type);
             ivPokemon = (ImageView) itemView.findViewById(R.id.iv_pokemon);
         }
     }
 
-    public PokeListAdapter(List<Pokemon> mPokemonList) {
+    public PokeListAdapter(List<GenericCommonEntity> mPokemonList) {
         this.mPokemonList = mPokemonList;
     }
 
@@ -56,14 +55,14 @@ public class PokeListAdapter extends RecyclerView.Adapter<PokeListAdapter.PokeLi
 
     @Override
     public void onBindViewHolder(final PokeListViewHolder holder, int position) {
-        Pokemon pokemon = mPokemonList.get(position);
+        GenericCommonEntity pokemon = mPokemonList.get(position);
         holder.name.setText(pokemon.getName().toUpperCase());
 
         PokemonInterface service = ClientApi.getClient().create(PokemonInterface.class);
-        Call<PokemonForm> callForm = service.getPokemonFormByName(pokemon.getName());
-        callForm.enqueue(new Callback<PokemonForm>() {
+        Call<Pokemon> callForm = service.getPokemonByName(pokemon.getName());
+        callForm.enqueue(new Callback<Pokemon>() {
             @Override
-            public void onResponse(Call<PokemonForm> call, Response<PokemonForm> response) {
+            public void onResponse(Call<Pokemon> call, Response<Pokemon> response) {
                 if (response.isSuccessful()) {
                     Picasso.with(holder.ivPokemon.getContext())
                             .load(response.body().getSprites().getFrontDefault())
@@ -75,13 +74,13 @@ public class PokeListAdapter extends RecyclerView.Adapter<PokeListAdapter.PokeLi
             }
 
             @Override
-            public void onFailure(Call<PokemonForm> call, Throwable t) {
+            public void onFailure(Call<Pokemon> call, Throwable t) {
                 Log.d(TAG, "onFailure: " + t.getMessage());
             }
         });
     }
 
-    public void addPokemonOnView(List<Pokemon> list) {
+    public void addPokemonOnView(List<GenericCommonEntity> list) {
         mPokemonList.addAll(list);
         notifyDataSetChanged();
     }

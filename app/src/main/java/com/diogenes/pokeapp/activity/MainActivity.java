@@ -8,14 +8,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.diogenes.pokeapp.R;
 import com.diogenes.pokeapp.adapter.PokeListAdapter;
 import com.diogenes.pokeapp.api.client.ClientApi;
 import com.diogenes.pokeapp.api.definition.PokemonInterface;
 import com.diogenes.pokeapp.listener.RecyclerViewTouchListener;
-import com.diogenes.pokeapp.model.Pokemon;
+import com.diogenes.pokeapp.model.GenericCommonEntity;
 import com.diogenes.pokeapp.model.PokemonList;
 
 import java.util.ArrayList;
@@ -31,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mRvPokeList;
     private PokeListAdapter adapter;
-    private List<Pokemon> listPokemon = new ArrayList<Pokemon>();
+    private List<GenericCommonEntity> listPokemon = new ArrayList<GenericCommonEntity>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,9 +73,6 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     PokemonList list = response.body();
                     adapter.addPokemonOnView(list.getPokemons());
-                    for (Pokemon pokemon : list.getPokemons()) {
-                        Log.d(TAG, "onResponse: " + pokemon.getName());
-                    }
                 } else {
                     Log.d(TAG, "onResponse: error  " + response.errorBody());
                 }
