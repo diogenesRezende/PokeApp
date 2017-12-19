@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient"
     android:paddingBottom="@dimen/fab_margin"
     android:paddingLeft="@dimen/fab_margin"
     android:paddingRight="@dimen/fab_margin"
@@ -16,7 +17,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@drawable/gradient">
 
             <ImageView
                 android:id="@+id/iv_detail_pokemon"
@@ -89,7 +91,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@drawable/gradient">
 
             <TextView
                 android:id="@+id/tv_detail_ability_title"
@@ -125,7 +128,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@drawable/gradient">
 
             <TextView
                 android:id="@+id/tv_detail_stats_title"
@@ -159,7 +163,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@drawable/gradient">
 
             <TextView
                 android:id="@+id/tv_detail_moves_title"

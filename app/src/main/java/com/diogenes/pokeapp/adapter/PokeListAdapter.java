@@ -66,7 +66,7 @@ public class PokeListAdapter extends RecyclerView.Adapter<PokeListAdapter.PokeLi
                 if (response.isSuccessful()) {
                     Picasso.with(holder.ivPokemon.getContext())
                             .load(response.body().getSprites().getFrontDefault())
-                            .resize(64, 64)
+                            .resize(96, 96)
                             .into(holder.ivPokemon);
                 } else {
                     Log.d(TAG, "onResponse: error" + response.errorBody());

@@ -6,6 +6,7 @@ import com.diogenes.pokeapp.model.PokemonList;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by diogenes on 16/12/17.
@@ -13,7 +14,7 @@ import retrofit2.http.Path;
 
 public interface PokemonInterface {
     @GET("api/v2/pokemon/")
-    Call<PokemonList> getPokemonList();
+    Call<PokemonList> getPokemonList(@Query("limit")int limit, @Query("offset")int offset);
     @GET("api/v2/pokemon/{id}")
     Call<Pokemon> getPokemonById(@Path("id")int id);
     @GET("api/v2/pokemon/{name}")

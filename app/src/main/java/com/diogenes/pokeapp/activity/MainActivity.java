@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -31,7 +32,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRvPokeList;
     private PokeListAdapter adapter;
     private List<GenericCommonEntity> listPokemon = new ArrayList<GenericCommonEntity>();
-
+    private int offset;
+    private boolean canLoad;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,11 +41,30 @@ public class MainActivity extends AppCompatActivity {
 
         mRvPokeList = (RecyclerView) findViewById(R.id.rv_pokelist);
         adapter = new PokeListAdapter(listPokemon);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        final GridLayoutManager layoutManager = new GridLayoutManager(this,3);
 
         mRvPokeList.setLayoutManager(layoutManager);
         mRvPokeList.setItemAnimator(new DefaultItemAnimator());
         mRvPokeList.setAdapter(adapter);
+        mRvPokeList.setHasFixedSize(true);
+        mRvPokeList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if(dy > 0){
+                    int visibleItemCount = layoutManager.getChildCount();
+                    int totalItemCount = layoutManager.getItemCount();
+                    int pastItemCount = layoutManager.findFirstVisibleItemPosition();
+                    if (canLoad){
+                        if ((visibleItemCount+pastItemCount)>= totalItemCount){
+                            canLoad = false;
+                            offset+=20;
+                            getData(offset);
+                        }
+                    }
+                }
+            }
+        });
         mRvPokeList.addOnItemTouchListener(
                 new RecyclerViewTouchListener(getApplicationContext(), mRvPokeList,
                         new RecyclerViewTouchListener.ClickListener() {
@@ -59,17 +80,19 @@ public class MainActivity extends AppCompatActivity {
 
                             }
                         }));
-
-        getData();
+        canLoad = true;
+        offset = 0;
+        getData(offset);
     }
 
 
-    public void getData() {
+    public void getData(int offset) {
         PokemonInterface pokemonInterface = ClientApi.getClient().create(PokemonInterface.class);
-        Call<PokemonList> callPokemonList = pokemonInterface.getPokemonList();
+        Call<PokemonList> callPokemonList = pokemonInterface.getPokemonList(20,offset);
         callPokemonList.enqueue(new Callback<PokemonList>() {
             @Override
             public void onResponse(Call<PokemonList> call, Response<PokemonList> response) {
+                canLoad = true;
                 if (response.isSuccessful()) {
                     PokemonList list = response.body();
                     adapter.addPokemonOnView(list.getPokemons());
@@ -80,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<PokemonList> call, Throwable t) {
+                canLoad = true;
                 Log.d(TAG, "onFailure: " + t.getMessage());
             }
         });
