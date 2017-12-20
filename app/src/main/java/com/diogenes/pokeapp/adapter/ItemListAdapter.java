@@ -12,6 +12,7 @@ import com.diogenes.pokeapp.R;
 import com.diogenes.pokeapp.api.client.ClientApi;
 import com.diogenes.pokeapp.api.definition.PokemonInterface;
 import com.diogenes.pokeapp.model.GenericCommonEntity;
+import com.diogenes.pokeapp.model.Item;
 import com.diogenes.pokeapp.model.Pokemon;
 import com.squareup.picasso.Picasso;
 
@@ -25,68 +26,68 @@ import retrofit2.Response;
  * Created by diogenes on 16/12/17.
  */
 
-public class PokeListAdapter extends RecyclerView.Adapter<PokeListAdapter.PokeListViewHolder> {
-    private static final String TAG = "PokeListAdapter";
-    private List<GenericCommonEntity> mPokemonList;
+public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.PokeListViewHolder> {
+    private static final String TAG = "ItemListAdapter";
+    private List<GenericCommonEntity> mItemList;
 
 
     public class PokeListViewHolder extends RecyclerView.ViewHolder {
         public TextView name;
         public TextView type;
-        public ImageView ivPokemon;
+        public ImageView ivItem;
 
         public PokeListViewHolder(View itemView) {
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.tv_name);
-            ivPokemon = (ImageView) itemView.findViewById(R.id.iv_item);
+            ivItem = (ImageView) itemView.findViewById(R.id.iv_item);
         }
     }
 
-    public PokeListAdapter(List<GenericCommonEntity> mPokemonList) {
-        this.mPokemonList = mPokemonList;
+    public ItemListAdapter(List<GenericCommonEntity> mItemList) {
+        this.mItemList = mItemList;
     }
 
     @Override
     public PokeListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View itemView = inflater.inflate(R.layout.pokemon, parent, false);
+        View itemView = inflater.inflate(R.layout.item, parent, false);
         return new PokeListViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(final PokeListViewHolder holder, int position) {
-        GenericCommonEntity pokemon = mPokemonList.get(position);
-        holder.name.setText(pokemon.getName().toUpperCase());
+        GenericCommonEntity item = mItemList.get(position);
+        holder.name.setText(item.getName().toUpperCase());
 
         PokemonInterface service = ClientApi.getClient().create(PokemonInterface.class);
-        Call<Pokemon> callForm = service.getPokemonByName(pokemon.getName());
-        callForm.enqueue(new Callback<Pokemon>() {
+        Call<Item> callItem = service.getItemByName(item.getName());
+        callItem.enqueue(new Callback<Item>() {
             @Override
-            public void onResponse(Call<Pokemon> call, Response<Pokemon> response) {
+            public void onResponse(Call<Item> call, Response<Item> response) {
                 if (response.isSuccessful()) {
-                    Picasso.with(holder.ivPokemon.getContext())
-                            .load(response.body().getSprites().getFrontDefault())
+                    Picasso.with(holder.ivItem.getContext())
+                            .load(response.body().getSprites().getDefault())
                             .resize(96, 96)
-                            .into(holder.ivPokemon);
+                            .into(holder.ivItem);
                 } else {
                     Log.d(TAG, "onResponse: error" + response.errorBody());
                 }
             }
 
             @Override
-            public void onFailure(Call<Pokemon> call, Throwable t) {
+            public void onFailure(Call<Item> call, Throwable t) {
                 Log.d(TAG, "onFailure: " + t.getMessage());
             }
         });
     }
 
-    public void addPokemonOnView(List<GenericCommonEntity> list) {
-        mPokemonList.addAll(list);
+    public void addItemOnView(List<GenericCommonEntity> list) {
+        mItemList.addAll(list);
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return mPokemonList.size();
+        return mItemList.size();
     }
 }

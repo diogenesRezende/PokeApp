@@ -30,6 +30,17 @@ public class Sprites {
     @SerializedName("front_shiny")
     @Expose
     private String frontShiny;
+    @SerializedName("default")
+    @Expose
+    private String _default;
+
+    public String getDefault() {
+        return _default;
+    }
+
+    public void setDefault(String _default) {
+        this._default = _default;
+    }
 
     public String getBackFemale() {
         return backFemale;

@@ -1,5 +1,6 @@
 package com.diogenes.pokeapp.api.definition;
 
+import com.diogenes.pokeapp.model.Item;
 import com.diogenes.pokeapp.model.ItemList;
 import com.diogenes.pokeapp.model.Pokemon;
 import com.diogenes.pokeapp.model.PokemonList;
@@ -18,8 +19,8 @@ public interface PokemonInterface {
     Call<PokemonList> getPokemonList(@Query("limit")int limit, @Query("offset")int offset);
     @GET("api/v2/item/")
     Call<ItemList> getItemList(@Query("limit")int limit, @Query("offset")int offset);
-    @GET("api/v2/pokemon/{id}")
-    Call<Pokemon> getPokemonById(@Path("id")int id);
     @GET("api/v2/pokemon/{name}")
     Call<Pokemon> getPokemonByName(@Path("name")String name);
+    @GET("api/v2/item/{name}")
+    Call<Item> getItemByName(@Path("name")String name);
 }

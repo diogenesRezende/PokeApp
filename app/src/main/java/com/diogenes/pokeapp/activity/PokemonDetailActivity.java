@@ -1,6 +1,9 @@
 package com.diogenes.pokeapp.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -10,6 +13,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.diogenes.pokeapp.R;
 import com.diogenes.pokeapp.adapter.AbilityListAdapter;
@@ -47,6 +51,7 @@ public class PokemonDetailActivity extends AppCompatActivity {
     private RecyclerView mRvMove;
     private List<Move> mMoves = new ArrayList<Move>();
     private MoveListAdapter mMoveListAdapter;
+    private ProgressDialog mPd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +94,10 @@ public class PokemonDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         GenericCommonEntity pokemon = (GenericCommonEntity) intent.getSerializableExtra("pokemon");
         getaData(pokemon.getName());
+        mPd = new ProgressDialog(this);
+        mPd.setMessage("Load Information...");
+        mPd.setCancelable(false);
+        mPd.show();
     }
 
     public void getaData(String pokemonName) {
@@ -97,20 +106,29 @@ public class PokemonDetailActivity extends AppCompatActivity {
         callDetailPokemon.enqueue(new Callback<Pokemon>() {
             @Override
             public void onResponse(Call<Pokemon> call, Response<Pokemon> response) {
+                if (mPd.isShowing()) {
+                    mPd.dismiss();
+                }
                 if (response.isSuccessful()) {
                     setDetailOnViews(response.body());
                 } else {
+                    Toast.makeText(getBaseContext(), "Error loading information! Check your connection!", Toast.LENGTH_LONG).show();
                     Log.d(TAG, "onResponse: error" + response.errorBody());
                 }
             }
 
             @Override
             public void onFailure(Call<Pokemon> call, Throwable t) {
+                Toast.makeText(getBaseContext(), "Error loading information! Check your connection!", Toast.LENGTH_LONG).show();
                 Log.d(TAG, "onFailure: " + t.getMessage());
+                if (mPd.isShowing()) {
+                    mPd.hide();
+                }
             }
         });
     }
-    public void setDetailOnViews(Pokemon pokemon){
+
+    public void setDetailOnViews(Pokemon pokemon) {
         Picasso.with(this)
                 .load(pokemon.getSprites().getFrontDefault())
                 .resize(64, 64)
@@ -122,6 +140,7 @@ public class PokemonDetailActivity extends AppCompatActivity {
         mStatListAdapter.addStatsOnView(pokemon.getStats());
         mMoveListAdapter.addMovesOnView(pokemon.getMoves());
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -136,8 +155,9 @@ public class PokemonDetailActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, PokemonActivity.class));
         finishAffinity();
         return;
     }
+
 }

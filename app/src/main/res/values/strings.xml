@@ -6,4 +6,6 @@
     <string name="detail_ability_title">Abilities</string>
     <string name="detail_stat_title">Stats</string>
     <string name="detail_moves_title">Moves</string>
+    <string name="lb_pokemons">Pokemons</string>
+    <string name="lb_items">Items</string>
 </resources>
